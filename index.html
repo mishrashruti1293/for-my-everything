@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+<style>
+    body {
+        margin: 0;
+        background: white;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    #text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #0b1f3a; /* navy */
+        font-size: 14px;
+        line-height: 1.5;
+        width: 60%;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="text">
+Because at the end of the day you're the person I want<br>
+to come home to. You're the person I want to tell<br>
+how my day went. You're the person I want to<br>
+share my happiness, sadness, frustration,<br>
+and success with.<br><br>
+please don't give up on me ever ♡<br>
+love you so much and I want to be with you forever.
+</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let angle = 0;
+
+function heart(t, scale) {
+    let x = 16 * Math.pow(Math.sin(t), 3);
+    let y = 13 * Math.cos(t)
+        - 5 * Math.cos(2 * t)
+        - 2 * Math.cos(3 * t)
+        - Math.cos(4 * t);
+    return {
+        x: canvas.width/2 + x * scale,
+        y: canvas.height/2 - y * scale
+    };
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let points = [];
+
+    for (let i = 0; i < 200; i++) {
+        let theta = (2 * Math.PI * i) / 200;
+        points.push(heart(theta + angle, 18));
+    }
+
+    ctx.strokeStyle = "#cc0000";
+    ctx.lineWidth = 2;
+
+    for (let i = 0; i < points.length; i++) {
+        let p1 = points[i];
+        let p2 = points[(i + 25) % points.length];
+
+        // protect center (text area)
+        if (Math.abs(p1.x - canvas.width/2) < 120 &&
+            Math.abs(p1.y - canvas.height/2) < 120) {
+            continue;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+    }
+
+    angle += 0.02;
+    requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+</body>
+</html>
